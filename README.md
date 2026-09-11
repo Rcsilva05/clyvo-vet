@@ -2,11 +2,27 @@
 
 > Java Advanced — FIAP — Challenge 2026, 2º Semestre — Sprint 3
 
+##  Equipe — Turma 2TDSR
+
+| Nome | RM |
+|---|---|
+| Natália Cristina | RM564099 |
+| Nickolas Davi | RM564105 |
+| Rodrigo Silva | RM565162 |
+| Samara Vilela | RM566133 |
+| Otávio Ferreira | RM565960 |
+
+##  Vídeo de apresentação
+
+`[link do YouTube aqui]`
+
+---
+
 O SOLIN nasceu como API REST nas Sprints 1 e 2 e virou aplicação web completa nesta Sprint 3, em **Spring Boot**. A ideia central não mudou: acompanhar a rotina diária de saúde de um pet (se urinou, se comeu, se bebeu água), seja o tutor registrando na mão ou um sensor IoT mandando os dados, e disparar um **alerta automático** quando algo sai do padrão esperado para aquela espécie. O que essa sprint trouxe de novo foi a tela em si — antes só existia a API — além de versionamento de banco com **Flyway** e login/permissões com **Spring Security**. O projeto é ambientado numa clínica fictícia, a **Clyvo Vet**.
 
 ---
 
-## 📌 Por que isso é um problema de verdade
+##  Por que isso é um problema de verdade
 
 Na prática, quase ninguém anota direito a rotina do próprio pet. E sem esse histórico, o veterinário só tem o relato de memória do tutor na hora da consulta — o que atrapalha bastante o diagnóstico de problemas urinários, renais ou comportamentais, principalmente em gatos, que são conhecidos por esconder sintomas até o quadro já estar avançado.
 
@@ -14,7 +30,7 @@ O SOLIN resolve isso registrando cada evento (urinou, comeu, bebeu água) com da
 
 ---
 
-## 🧱 Arquitetura
+##  Arquitetura
 
 ```
 Tutor (navegador) ──┐
@@ -58,7 +74,7 @@ A aplicação segue arquitetura em camadas: **Controller (Web/REST) → Service 
 
 ---
 
-## 👤 Perfis de acesso (Spring Security)
+##  Perfis de acesso (Spring Security)
 
 | Perfil | O que pode fazer |
 |---|---|
@@ -97,13 +113,13 @@ Na primeira subida, o **Flyway** executa automaticamente as migrations em `src/m
 A aplicação sobe na porta **8080** com context path **/solin**.
 URL base: `http://localhost:8080/solin`
 
-> ⚠️ **Este projeto não roda em H2/localhost sem banco real** — é necessário o PostgreSQL do `docker compose up -d` (ou outro Postgres acessível, ajustando `DB_URL`/`DB_USER`/`DB_PASSWORD`).
+>  **Este projeto não roda em H2/localhost sem banco real** — é necessário o PostgreSQL do `docker compose up -d` (ou outro Postgres acessível, ajustando `DB_URL`/`DB_USER`/`DB_PASSWORD`).
 
 **3. Acesse pelo navegador:**
 
 `http://localhost:8080/solin/login`
 
-### 🔑 Acesso para avaliação (login pronto, sem precisar cadastrar nada)
+### Acesso para avaliação (login pronto, sem precisar cadastrar nada)
 
 Para quem for rodar o projeto e avaliar sem cadastrar conta própria, este é o login do veterinário — é o que dá acesso ao **painel completo da clínica** (todos os pets, todos os alertas):
 
@@ -142,7 +158,7 @@ mvn spring-boot:run
 
 ---
 
-## 🗄️ Flyway — controle de versão do banco
+##  Flyway — controle de versão do banco
 
 | Migration | Conteúdo |
 |---|---|
@@ -158,7 +174,7 @@ O Hibernate está configurado com `ddl-auto=validate` — ou seja, **é o Flyway
 
 ---
 
-## 🌐 Fluxos completos da aplicação (frontend)
+##  Fluxos completos da aplicação (frontend)
 
 Todo o uso do sistema — cadastrar, registrar e atualizar — acontece **dentro do próprio site**, em telas normais de formulário. Não é necessário usar o Swagger para nada disso; ele existe só como documentação técnica extra da API REST (ver seção abaixo), não como parte do fluxo do produto.
 
@@ -208,7 +224,7 @@ O front-end chama o back-end via `fetch` (POST em `/tutor/assistente/perguntar`,
 
 ---
 
-## 📖 Documentação Swagger (API REST original)
+##  Documentação Swagger (API REST original)
 
 A API REST das Sprints anteriores continua disponível (usada por app mobile / sensor IoT) e agora também exige autenticação (Basic Auth). Ela é apenas **documentação técnica opcional** dos endpoints — todo o uso funcional do sistema descrito acima já acontece direto pelo site, sem precisar dela:
 
@@ -217,85 +233,85 @@ A API REST das Sprints anteriores continua disponível (usada por app mobile / s
 
 ---
 
-## 🖼️ Evidências de funcionamento
+##  Evidências de funcionamento
 
 Prints reais de um teste completo do sistema rodando local, cobrindo os dois perfis (tutor e veterinário) de ponta a ponta — do banco de dados subindo até um alerta crítico sendo resolvido pela clínica. Todos os arquivos ficam na pasta `docs/`.
 
 **1. Banco de dados e migrations**
 
-Conexão com o banco `solindb` via psql, e a tabela `flyway_schema_history` mostrando as 7 migrations aplicadas com sucesso:
+Console do IntelliJ com a aplicação subindo e as 7 migrations do Flyway aplicadas com sucesso:
 
-![Conexão psql e histórico de migrations do Flyway](docs/psql-flyway-historico.png)
+![Console do IntelliJ com as 7 migrations do Flyway aplicadas](docs/intellij-console-flyway-7-migrations.png)
 
-Consulta na tabela `TB_ESPECIE`, mostrando os limites de horas configurados por espécie (usados pelas regras de alerta):
+Conexão com o banco `solindb` via psql:
 
-![Tabela de espécies com os limites de horas](docs/psql-tabela-especie.png)
+![Conexão com o banco solindb via psql](docs/psql-conexao-solindb.png)
 
-Durante os testes, usamos o próprio psql para simular cenários (forçar um evento antigo, apagar um evento duplicado) e conferir que o motor de alertas está reagindo certo aos dados — não é só "aparecer bonito na tela", o alerta reflete o que está de fato salvo no banco:
+Durante os testes, usamos o próprio psql para simular cenários (apagar um evento duplicado que estava mascarando o alerta) e conferir que o motor de alertas está reagindo certo aos dados — não é só "aparecer bonito na tela", o alerta reflete o que está de fato salvo no banco:
 
-![Consulta e ajuste de eventos via psql durante o teste](docs/psql-eventos-debug.png)
+![Comando DELETE de evento executado no psql durante o teste](docs/psql-delete-eventos.png)
 
-**2. Login com identidade visual da Clyvo Vet**
+**2. Criação de conta e login**
 
-![Tela de login com o fundo autoral](docs/tela-login.png)
+Tela de criação de conta — qualquer pessoa pode se cadastrar como tutor por aqui, sem precisar de nenhuma senha fixa:
+
+![Tela de criação de conta de tutor](docs/tela-cadastro-conta-tutor.png)
+
+Tela de login com o fundo autoral (foto do pet):
+
+![Tela de login com a foto de fundo](docs/tela-login-foto-cachorro.png)
 
 **3. Área do tutor — cadastro de pet**
 
-Formulário de cadastro de um novo pet, com espécie selecionada:
+Formulário de cadastro de um novo pet, com a espécie selecionada:
 
-![Formulário de cadastro de pet](docs/tutor-cadastrar-pet.png)
+![Formulário de cadastro de pet com espécie selecionada](docs/tutor-cadastrar-pet-especies.png)
 
 **4. Área do tutor — painel "Meus pets"**
 
-Logo depois de desativar um pet (soft delete): o histórico continua salvo, só some da lista do dia a dia:
+Painel-resumo no topo (total de pets, alertas ativos, último evento registrado) e os cards dos pets cadastrados:
 
-![Pet desativado, mensagem de confirmação](docs/tutor-pet-desativado.png)
-
-Com um pet ativo cadastrado, mostrando o painel-resumo no topo (total de pets, alertas ativos, último evento registrado):
-
-![Painel Meus pets com resumo no topo](docs/tutor-meus-pets-resumo.png)
+![Painel Meus pets com o resumo no topo](docs/tutor-meus-pets-dashboard.png)
 
 **5. Registro de evento de saúde**
 
-Formulário preenchido com um evento retroativo (usado para forçar o teste do motor de alertas):
+Formulário de registro de evento preenchido pelo tutor:
 
-![Formulário de registro de evento](docs/tutor-registrar-evento.png)
+![Formulário de registro de evento de saúde](docs/tutor-registrar-evento-formulario.png)
 
-Ficha do pet já com o alerta **vermelho** disparado na timeline, e o botão de excluir evento:
+Ficha do pet já com o alerta **vermelho** disparado na timeline:
 
-![Ficha do pet com alerta vermelho na timeline](docs/tutor-pet-detalhe-alerta.png)
+![Ficha do pet com alerta vermelho na timeline de eventos](docs/tutor-pet-detalhe-alerta-vermelho.png)
+
+O tutor também pode excluir um evento registrado errado direto pela própria timeline:
+
+![Botão de excluir evento na ficha do pet](docs/tutor-pet-detalhe-excluir-evento.png)
 
 **6. Assistente SOLIN (chat baseado em regras)**
 
-Resposta do assistente identificando o alerta crítico ativo do pet:
+Conversa com o assistente, respondendo sobre o alerta ativo e os últimos eventos do pet a partir dos dados reais cadastrados:
 
-![Assistente SOLIN respondendo sobre o alerta ativo](docs/assistente-alerta-ativo.png)
+![Chat do Assistente SOLIN respondendo sobre o pet selecionado](docs/tutor-assistente-chat.png)
 
-Resposta listando os últimos eventos registrados do pet:
+**7. Painel do veterinário**
 
-![Assistente SOLIN respondendo sobre eventos recentes](docs/assistente-ultimos-eventos.png)
+Alerta crítico (vermelho) pendente, aguardando avaliação da clínica:
 
-**7. Painel do veterinário — antes de atender**
+![Painel do veterinário com alerta vermelho pendente](docs/vet-painel-alerta-pendente.png)
 
-Alerta crítico (vermelho) pendente, junto de outros já resolvidos anteriormente:
+Mesmo alerta, já marcado como resolvido depois do atendimento:
 
-![Painel do veterinário com alerta vermelho pendente](docs/vet-painel-pendente.png)
+![Alerta marcado como resolvido pela clínica](docs/vet-painel-alerta-resolvido.png)
 
-**8. Painel do veterinário — depois de atender**
-
-Mesmo alerta, agora marcado como resolvido pela clínica:
-
-![Alerta marcado como resolvido](docs/vet-painel-resolvido.png)
-
-**9. Painel do veterinário — todos os pets da clínica**
+**8. Painel do veterinário — todos os pets da clínica**
 
 Listagem consolidada com os pets de diferentes tutores, visível só pelo perfil veterinário:
 
-![Tabela com todos os pets da clínica](docs/vet-todos-os-pets.png)
+![Tabela com todos os pets da clínica](docs/vet-todos-os-pets-lista.png)
 
 ---
 
-## 🚨 Regras de alerta (Strategy Pattern)
+##  Regras de alerta (Strategy Pattern)
 
 Cada espécie tem dois limites configurados em `TB_ESPECIE`: `horasMaximasSemUrinar` (Cachorro = 8h, Gato = 24h, Coelho = 12h, ...) e `horasMaximasSemBeberAgua` (Cachorro = 12h, Gato = 18h, Coelho = 10h, ...).
 
@@ -312,7 +328,7 @@ As duas últimas foram adicionadas depois das duas primeiras, sem alterar uma li
 
 ---
 
-## ✅ Requisitos atendidos (Sprint 3 — Java Advanced)
+##  Requisitos atendidos (Sprint 3 — Java Advanced)
 
 - [x] **Frontend**: Thymeleaf server-side, layout responsivo autoral (conceito "monitor de sinais vitais"), telas de login, criação de conta, área do tutor (pets, cadastro de pet, registro de evento) e painel do veterinário
 - [x] **Flyway**: 7 migrations versionadas, schema completo + seed de dados + evoluções incrementais (novas espécies, novos campos, soft delete)
@@ -324,7 +340,7 @@ As duas últimas foram adicionadas depois das duas primeiras, sem alterar uma li
 
 ---
 
-## 📂 Estrutura do projeto
+##  Estrutura do projeto
 
 ```
 src/main/java/br/com/fiap/solin/
@@ -352,14 +368,6 @@ docs/               → Prints/evidências de funcionamento (ver seção "Evidê
 ---
 
 ## 👥 Equipe
-
-| Nome | RM |
-|---|---|
-| Natália Cristina | RM564099 |
-| Nickolas Davi | RM564105 |
-| Rodrigo Silva | RM565162 |
-| Samara Vilela | RM566133 |
-| Otávio Ferreira | RM565960 |
 
 Repositório GitHub: https://github.com/Rcsilva05/solin---java---chalenge
 
