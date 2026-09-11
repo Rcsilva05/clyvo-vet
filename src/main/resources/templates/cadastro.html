@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Criar conta')}"></head>
+<body>
+
+<div class="login-shell">
+    <section class="login-visual">
+        <div class="brand">
+            <div class="brand-mark">S</div>
+            <div class="brand-text">
+                <strong>SOLIN</strong>
+                <span>Clyvo Vet</span>
+            </div>
+        </div>
+
+        <svg class="vitalline" viewBox="0 0 400 46" preserveAspectRatio="none" style="margin-top:28px;">
+            <path d="M0 23 H120 L136 6 L152 40 L168 23 H400" />
+        </svg>
+
+        <div class="claim">
+            <h2>Sua conta, seus pets.</h2>
+            <p>Crie sua conta de tutor para cadastrar seus pets e acompanhar a rotina de saúde deles pelo SOLIN — a Clyvo Vet é avisada automaticamente se algo sair do padrão esperado.</p>
+        </div>
+    </section>
+
+    <section class="login-form-side">
+        <div class="login-box">
+            <h1>Criar conta</h1>
+            <p class="sub">Cadastre-se como tutor para começar a usar o SOLIN.</p>
+
+            <form class="form-grid" th:action="@{/cadastro}" th:object="${cadastroForm}" method="post">
+
+                <div th:if="${#fields.hasErrors('*')}" class="flash error">
+                    Verifique os campos destacados abaixo antes de continuar.
+                </div>
+
+                <div class="field">
+                    <label for="nome">Nome completo</label>
+                    <input type="text" id="nome" th:field="*{nome}" maxlength="120" placeholder="Seu nome" th:classappend="${#fields.hasErrors('nome')} ? 'invalid'">
+                    <span class="error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></span>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" th:field="*{email}" maxlength="150" placeholder="voce@email.com" th:classappend="${#fields.hasErrors('email')} ? 'invalid'">
+                    <span class="hint">Este será o email usado para entrar no SOLIN.</span>
+                    <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                </div>
+
+                <div class="field">
+                    <label for="telefone">Telefone</label>
+                    <input type="text" id="telefone" th:field="*{telefone}" placeholder="Ex: (11) 91234-5678" th:classappend="${#fields.hasErrors('telefone')} ? 'invalid'">
+                    <span class="error" th:if="${#fields.hasErrors('telefone')}" th:errors="*{telefone}"></span>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" th:field="*{senha}" placeholder="••••••••" th:classappend="${#fields.hasErrors('senha')} ? 'invalid'">
+                        <span class="error" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="confirmarSenha">Confirmar senha</label>
+                        <input type="password" id="confirmarSenha" th:field="*{confirmarSenha}" placeholder="••••••••" th:classappend="${#fields.hasErrors('confirmarSenha')} ? 'invalid'">
+                        <span class="error" th:if="${#fields.hasErrors('confirmarSenha')}" th:errors="*{confirmarSenha}"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Criar minha conta</button>
+            </form>
+
+            <div class="demo-creds">
+                Já tem conta? <a th:href="@{/login}">Entrar</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

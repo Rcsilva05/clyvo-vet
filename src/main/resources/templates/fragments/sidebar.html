@@ -1,0 +1,74 @@
+<th:block th:fragment="sidebar(area, ativo)">
+
+<div class="topbar-mobile">
+    <div class="brand">
+        <div class="brand-mark">S</div>
+        <div class="brand-text">
+            <strong>SOLIN</strong>
+            <span>Clyvo Vet</span>
+        </div>
+    </div>
+    <button type="button" class="menu-toggle" aria-label="Abrir menu" onclick="document.body.classList.toggle('nav-open')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+</div>
+
+<div class="drawer-backdrop" onclick="document.body.classList.remove('nav-open')"></div>
+
+<div class="sidebar">
+    <div class="brand">
+        <div class="brand-mark">S</div>
+        <div class="brand-text">
+            <strong>SOLIN</strong>
+            <span>Clyvo Vet</span>
+        </div>
+    </div>
+
+    <div th:if="${area == 'tutor'}" class="nav-group">
+        <div class="nav-label">Minha conta</div>
+        <a th:href="@{/tutor/inicio}" class="nav-link" th:classappend="${ativo == 'pets'} ? 'active'">
+            <span class="dot"></span> Meus pets
+        </a>
+        <a th:href="@{/tutor/eventos/novo}" class="nav-link" th:classappend="${ativo == 'evento-novo'} ? 'active'">
+            <span class="dot"></span> Registrar evento
+        </a>
+        <a th:href="@{/tutor/pets/novo}" class="nav-link" th:classappend="${ativo == 'pet-novo'} ? 'active'">
+            <span class="dot"></span> Cadastrar pet
+        </a>
+        <a th:href="@{/tutor/assistente}" class="nav-link" th:classappend="${ativo == 'assistente'} ? 'active'">
+            <span class="dot"></span> Assistente SOLIN
+        </a>
+    </div>
+
+    <div th:if="${area == 'vet'}" class="nav-group">
+        <div class="nav-label">Painel clinico</div>
+        <a th:href="@{/vet/painel}" class="nav-link" th:classappend="${ativo == 'painel'} ? 'active'">
+            <span class="dot"></span> Alertas
+        </a>
+        <a th:href="@{/vet/pets}" class="nav-link" th:classappend="${ativo == 'pets'} ? 'active'">
+            <span class="dot"></span> Todos os pets
+        </a>
+    </div>
+
+    <div class="nav-group" style="margin-top: -8px;">
+        <div class="nav-label">Documentacao</div>
+        <a th:href="@{/swagger-ui.html}" target="_blank" class="nav-link">
+            <span class="dot"></span> API (Swagger)
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="user-chip">
+            <div class="user-avatar" th:text="${#strings.substring(#authentication.principal.nome,0,1)}">U</div>
+            <div class="user-meta">
+                <strong th:text="${#authentication.principal.nome}">Usuario</strong>
+                <span th:text="${area == 'tutor'} ? 'Tutor' : 'Veterinario'">Perfil</span>
+            </div>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout">Sair</button>
+        </form>
+    </div>
+</div>
+
+</th:block>

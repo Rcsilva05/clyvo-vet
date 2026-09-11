@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Cadastrar pet')}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar('tutor', 'pet-novo')}"></div>
+
+    <main class="app-main">
+        <div class="container" style="max-width: 640px;">
+
+            <div class="page-head">
+                <div>
+                    <div class="eyebrow"><span class="pulse-dot"></span> Novo paciente</div>
+                    <h1>Cadastrar pet</h1>
+                    <p class="sub">Depois de cadastrado, o pet passa a ser monitorado automaticamente pelo SOLIN.</p>
+                </div>
+            </div>
+
+            <form class="card form-grid" th:action="@{/tutor/pets/novo}" th:object="${petForm}" method="post">
+
+                <div th:if="${#fields.hasErrors('*')}" class="flash error">
+                    Verifique os campos destacados abaixo antes de continuar.
+                </div>
+
+                <div class="field">
+                    <label for="nome">Nome do pet</label>
+                    <input type="text" id="nome" th:field="*{nome}" maxlength="80" placeholder="Ex: Bidu" th:classappend="${#fields.hasErrors('nome')} ? 'invalid'">
+                    <span class="error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></span>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="especieId">Espécie</label>
+                        <select id="especieId" th:field="*{especieId}" th:classappend="${#fields.hasErrors('especieId')} ? 'invalid'">
+                            <option value="" disabled th:selected="${petForm.especieId == null}">Selecione</option>
+                            <option th:each="especie : ${especies}" th:value="${especie.id}" th:text="${especie.nome}"></option>
+                        </select>
+                        <span class="error" th:if="${#fields.hasErrors('especieId')}" th:errors="*{especieId}"></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="raca">Raça (opcional)</label>
+                        <input type="text" id="raca" th:field="*{raca}" maxlength="80" placeholder="Ex: Labrador" th:classappend="${#fields.hasErrors('raca')} ? 'invalid'">
+                        <span class="error" th:if="${#fields.hasErrors('raca')}" th:errors="*{raca}"></span>
+                    </div>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="idadeAnos">Idade aproximada (opcional)</label>
+                        <input type="number" id="idadeAnos" th:field="*{idadeAnos}" min="0" max="40" step="1" placeholder="Ex: 3" th:classappend="${#fields.hasErrors('idadeAnos')} ? 'invalid'">
+                        <span class="hint">Deixe em branco se não souber a idade exata.</span>
+                        <span class="error" th:if="${#fields.hasErrors('idadeAnos')}" th:errors="*{idadeAnos}"></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="sexo">Sexo</label>
+                        <select id="sexo" th:field="*{sexo}" th:classappend="${#fields.hasErrors('sexo')} ? 'invalid'">
+                            <option value="" disabled th:selected="${petForm.sexo == null}">Selecione</option>
+                            <option value="MACHO">Macho</option>
+                            <option value="FEMEA">Fêmea</option>
+                        </select>
+                        <span class="error" th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}"></span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="pesoKg">Peso (kg)</label>
+                    <input type="number" id="pesoKg" th:field="*{pesoKg}" step="0.1" min="0.1" max="150" placeholder="Ex: 12.5" th:classappend="${#fields.hasErrors('pesoKg')} ? 'invalid'">
+                    <span class="error" th:if="${#fields.hasErrors('pesoKg')}" th:errors="*{pesoKg}"></span>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:6px;">
+                    <button type="submit" class="btn btn-primary">Cadastrar pet</button>
+                    <a th:href="@{/tutor/inicio}" class="btn btn-ghost">Cancelar</a>
+                </div>
+            </form>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>

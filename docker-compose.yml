@@ -1,0 +1,21 @@
+services:
+  solin-db:
+    image: postgres:16-alpine
+    container_name: solin-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: solindb
+      POSTGRES_USER: solin
+      POSTGRES_PASSWORD: solin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - solin-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U solin -d solindb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  solin-db-data:

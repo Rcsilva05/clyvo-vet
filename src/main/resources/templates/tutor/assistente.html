@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Assistente SOLIN')}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar('tutor', 'assistente')}"></div>
+
+    <main class="app-main">
+        <div class="container" style="max-width:760px;">
+
+            <div class="page-head">
+                <div>
+                    <div class="eyebrow"><span class="pulse-dot"></span> Orientação sobre a rotina do pet</div>
+                    <h1>Assistente SOLIN</h1>
+                    <p class="sub">Tire dúvidas rápidas sobre a saúde do seu pet, com base no histórico já registrado.</p>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(pets)}" class="card empty">
+                <h3>Nenhum pet cadastrado ainda</h3>
+                <p>Cadastre um pet primeiro para poder conversar com o assistente sobre ele.</p>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(pets)}">
+                <div class="chat-aviso">
+                    ℹ️ Este assistente responde com base em regras do sistema (alertas e eventos já registrados) —
+                    não é uma inteligência artificial generativa, então as respostas são sempre previsíveis e
+                    baseadas apenas nos dados reais do seu pet.
+                </div>
+
+                <div class="field" style="max-width:320px; margin-bottom:18px;">
+                    <label for="seletor-pet">Sobre qual pet você quer falar?</label>
+                    <select id="seletor-pet">
+                        <option th:each="pet : ${pets}"
+                                th:value="${pet.id}"
+                                th:text="${pet.nome} + ' · ' + ${pet.nomeEspecie}"
+                                th:selected="${pet.id == petSelecionadoId}">
+                            Pet
+                        </option>
+                    </select>
+                </div>
+
+                <div class="card">
+                    <div id="chat-janela" class="chat-janela">
+                        <div class="chat-bolha assistente">
+                            Olá! Eu sou o assistente do SOLIN. Escolha uma das perguntas abaixo para eu avaliar a
+                            rotina do pet selecionado.
+                        </div>
+                    </div>
+
+                    <div class="chat-sugestoes" id="chat-sugestoes">
+                        <button type="button" class="chat-sugestao" th:each="pergunta : ${perguntas}"
+                                th:text="${pergunta}" th:attr="data-pergunta=${pergunta}"></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    (function () {
+        var janela = document.getElementById('chat-janela');
+        var seletorPet = document.getElementById('seletor-pet');
+        var sugestoes = document.getElementById('chat-sugestoes');
+        if (!janela || !seletorPet) return;
+
+        var csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        var csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+        var urlPerguntar = /*[[@{/tutor/assistente/perguntar}]]*/ '/tutor/assistente/perguntar';
+
+        function rolarParaFim() {
+            janela.scrollTop = janela.scrollHeight;
+        }
+
+        function adicionarBolha(texto, classe) {
+            var bolha = document.createElement('div');
+            bolha.className = 'chat-bolha ' + classe;
+            bolha.textContent = texto;
+            janela.appendChild(bolha);
+            rolarParaFim();
+            return bolha;
+        }
+
+        function travarSugestoes(travar) {
+            var botoes = sugestoes.querySelectorAll('.chat-sugestao');
+            botoes.forEach(function (botao) { botao.disabled = travar; });
+        }
+
+        function perguntar(pergunta) {
+            adicionarBolha(pergunta, 'tutor');
+            var bolhaCarregando = adicionarBolha('Consultando o histórico do pet...', 'carregando');
+            travarSugestoes(true);
+
+            var headers = { 'Content-Type': 'application/json' };
+            headers[csrfHeader] = csrfToken;
+
+            fetch(urlPerguntar, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({ petId: Number(seletorPet.value), pergunta: pergunta })
+            })
+                .then(function (resposta) {
+                    if (!resposta.ok) throw new Error('Falha ao consultar o assistente.');
+                    return resposta.json();
+                })
+                .then(function (dados) {
+                    bolhaCarregando.remove();
+                    adicionarBolha(dados.resposta, 'assistente');
+                })
+                .catch(function () {
+                    bolhaCarregando.remove();
+                    adicionarBolha('Não consegui responder agora. Tente novamente em instantes.', 'assistente');
+                })
+                .finally(function () {
+                    travarSugestoes(false);
+                });
+        }
+
+        sugestoes.querySelectorAll('.chat-sugestao').forEach(function (botao) {
+            botao.addEventListener('click', function () {
+                perguntar(botao.getAttribute('data-pergunta'));
+            });
+        });
+    })();
+</script>
+
+</body>
+</html>

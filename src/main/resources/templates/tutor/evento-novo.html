@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Registrar evento')}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar('tutor', 'evento-novo')}"></div>
+
+    <main class="app-main">
+        <div class="container" style="max-width: 640px;">
+
+            <div class="page-head">
+                <div>
+                    <div class="eyebrow"><span class="pulse-dot"></span> Novo registro</div>
+                    <h1>Registrar evento de saúde</h1>
+                    <p class="sub">Cada evento é avaliado na hora pelo motor de alertas do SOLIN. Se a frequência fugir do esperado para a espécie, um alerta é gerado automaticamente para a Clyvo Vet.</p>
+                </div>
+            </div>
+
+            <form class="card form-grid" th:action="@{/tutor/eventos/novo}" th:object="${eventoForm}" method="post">
+
+                <div th:if="${#fields.hasErrors('*')}" class="flash error">
+                    Verifique os campos destacados abaixo antes de continuar.
+                </div>
+
+                <div class="field">
+                    <label for="petId">Pet</label>
+                    <select id="petId" th:field="*{petId}" th:classappend="${#fields.hasErrors('petId')} ? 'invalid'">
+                        <option value="" disabled th:selected="${eventoForm.petId == null}">Selecione um pet</option>
+                        <option th:each="pet : ${pets}" th:value="${pet.id}" th:text="${pet.nome} + ' · ' + ${pet.nomeEspecie}"></option>
+                    </select>
+                    <span class="error" th:if="${#fields.hasErrors('petId')}" th:errors="*{petId}"></span>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="tipo">Tipo de evento</label>
+                        <select id="tipo" th:field="*{tipo}" th:classappend="${#fields.hasErrors('tipo')} ? 'invalid'">
+                            <option value="">Selecione</option>
+                            <option value="URINOU">Urinou</option>
+                            <option value="NAO_URINOU">Não urinou (período sem sinal)</option>
+                            <option value="DEFECOU">Defecou</option>
+                            <option value="COMEU">Comeu</option>
+                            <option value="BEBEU_AGUA">Bebeu água</option>
+                            <option value="MEDICAMENTO">Recebeu medicamento</option>
+                        </select>
+                        <span class="error" th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}"></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="origem">Origem do registro</label>
+                        <select id="origem" th:field="*{origem}" th:classappend="${#fields.hasErrors('origem')} ? 'invalid'">
+                            <option value="MANUAL">Manual (registrado por mim)</option>
+                            <option value="SENSOR_IOT">Sensor IoT</option>
+                        </select>
+                        <span class="error" th:if="${#fields.hasErrors('origem')}" th:errors="*{origem}"></span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="dataHora">Data e hora do evento</label>
+                    <input type="datetime-local" id="dataHora" th:field="*{dataHora}" th:classappend="${#fields.hasErrors('dataHora')} ? 'invalid'">
+                    <span class="hint">Não é possível registrar eventos no futuro.</span>
+                    <span class="error" th:if="${#fields.hasErrors('dataHora')}" th:errors="*{dataHora}"></span>
+                </div>
+
+                <div class="field">
+                    <label for="observacao">Observação (opcional)</label>
+                    <textarea id="observacao" th:field="*{observacao}" maxlength="255" placeholder="Ex: pouco apetite hoje, urina mais escura que o normal..." th:classappend="${#fields.hasErrors('observacao')} ? 'invalid'"></textarea>
+                    <span class="error" th:if="${#fields.hasErrors('observacao')}" th:errors="*{observacao}"></span>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:6px;">
+                    <button type="submit" class="btn btn-primary">Registrar evento</button>
+                    <a th:href="@{/tutor/inicio}" class="btn btn-ghost">Cancelar</a>
+                </div>
+            </form>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>

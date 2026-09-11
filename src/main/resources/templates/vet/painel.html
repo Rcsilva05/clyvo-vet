@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Painel de alertas')}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar('vet', 'painel')}"></div>
+
+    <main class="app-main">
+        <div class="container">
+
+            <div th:if="${mensagem}" class="flash" th:classappend="${tipoFlash}" th:text="${mensagem}"></div>
+
+            <div class="page-head">
+                <div>
+                    <div class="eyebrow"><span class="pulse-dot"></span> Central clínica · Clyvo Vet</div>
+                    <h1>Painel de alertas</h1>
+                    <p class="sub">Todos os pets monitorados pelo SOLIN, consolidados por gravidade. Resolva um alerta após o atendimento ao tutor.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-3" style="margin-bottom:22px;">
+                <div class="card stat tone-coral">
+                    <div class="value" th:text="${totalCriticos}">0</div>
+                    <div class="label">Alertas críticos abertos</div>
+                </div>
+                <div class="card stat tone-amber">
+                    <div class="value" th:text="${totalPendentes}">0</div>
+                    <div class="label">Total de alertas pendentes</div>
+                </div>
+                <div class="card stat tone-pulse">
+                    <div class="value" th:text="${#lists.size(alertas)}">0</div>
+                    <div class="label">Alertas no filtro atual</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>Alertas</span>
+                    <span style="display:flex; gap:8px;">
+                        <a th:href="@{/vet/painel(resolvido=false)}" class="btn btn-sm" th:classappend="${filtroResolvido == false} ? 'btn-primary' : 'btn-ghost'">Pendentes</a>
+                        <a th:href="@{/vet/painel(resolvido=true)}" class="btn btn-sm" th:classappend="${filtroResolvido == true} ? 'btn-primary' : 'btn-ghost'">Resolvidos</a>
+                        <a th:href="@{/vet/painel}" class="btn btn-sm" th:classappend="${filtroResolvido == null} ? 'btn-primary' : 'btn-ghost'">Todos</a>
+                    </span>
+                </div>
+
+                <div th:if="${#lists.isEmpty(alertas)}" class="empty">
+                    <h3>Nenhum alerta neste filtro</h3>
+                    <p>Tudo tranquilo por aqui.</p>
+                </div>
+
+                <div th:each="alerta : ${alertas}" class="alert-row" th:classappend="${alerta.nivel.name().toLowerCase()}">
+                    <div>
+                        <span class="badge" th:classappend="${alerta.resolvido} ? 'ok' : ${alerta.nivel.name().toLowerCase()}">
+                            <span class="dot"></span>
+                            <span th:text="${alerta.resolvido} ? 'Resolvido' : ${alerta.nivel}">status</span>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="msg">
+                            <strong th:text="${alerta.nomePet}">Pet</strong> —
+                            <span th:text="${alerta.mensagem}">mensagem</span>
+                        </div>
+                        <div class="meta" th:text="${#temporals.format(alerta.dataHoraGerado, 'dd/MM/yyyy HH:mm')}">data</div>
+                    </div>
+                    <div>
+                        <form th:if="${!alerta.resolvido}" th:action="@{/vet/alertas/{id}/resolver(id=${alerta.id})}" method="post">
+                            <button type="submit" class="btn btn-sm btn-primary">Marcar resolvido</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Build Maven
+target/
+*.jar
+*.war
+cat > .gitignore << 'EOF'
+# Build Maven
+target/
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs e configs locais
+*.log
+application-local.properties
+.env

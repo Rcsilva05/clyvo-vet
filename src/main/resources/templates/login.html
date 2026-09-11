@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Entrar')}"></head>
+<body>
+
+<div class="login-shell">
+    <section class="login-visual">
+        <div class="brand">
+            <div class="brand-mark">S</div>
+            <div class="brand-text">
+                <strong>SOLIN</strong>
+                <span>Clyvo Vet</span>
+            </div>
+        </div>
+
+        <div class="claim">
+            <h2>A rotina do pet, lida como um sinal vital.</h2>
+            <p>O SOLIN acompanha alimentação, hidratação e idas ao banheiro dos pets da Clyvo Vet — manual ou via sensor IoT — e avisa o tutor e a clínica antes que um sintoma silencioso vire uma emergência.</p>
+        </div>
+    </section>
+
+    <section class="login-form-side">
+        <div class="login-box">
+
+            <div class="login-tabs" role="tablist">
+                <button type="button" id="tab-tutor" class="login-tab active"
+                        onclick="solinTrocarAbaLogin('tutor')">Sou Tutor</button>
+                <button type="button" id="tab-vet" class="login-tab"
+                        onclick="solinTrocarAbaLogin('vet')">Sou Veterinário</button>
+            </div>
+
+            <div th:if="${mensagem}" class="flash" th:classappend="${tipoFlash}" th:text="${mensagem}"></div>
+            <div th:if="${param.erro}" class="flash error">Email ou senha inválidos. Tente novamente.</div>
+            <div th:if="${param.logout}" class="flash success">Sessão encerrada com sucesso.</div>
+
+            <div id="painel-tutor" class="login-panel">
+                <h1>Entrar como Tutor</h1>
+                <p class="sub">Acesse para acompanhar a saúde dos seus pets.</p>
+            </div>
+
+            <div id="painel-vet" class="login-panel" hidden>
+                <h1>Entrar como Veterinário</h1>
+                <p class="sub">Acesse o painel clínico da Clyvo Vet.</p>
+            </div>
+
+            <form th:action="@{/login}" method="post" class="form-grid">
+                <div class="field">
+                    <label for="username">Email</label>
+                    <input type="email" id="username" name="username" required autofocus placeholder="voce@email.com">
+                </div>
+                <div class="field">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary">Entrar no SOLIN</button>
+            </form>
+
+            <div id="cadastro-tutor" class="demo-creds">
+                Ainda não tem conta? <a th:href="@{/cadastro}">Criar conta de tutor</a>
+            </div>
+
+            <div id="demo-tutor" class="demo-creds">
+                <strong>Conta de demonstração (Tutor)</strong><br>
+                <code>tutor.demo@solin.com</code> / <code>demo123</code>
+            </div>
+
+            <div id="demo-vet" class="demo-creds" hidden>
+                <strong>Conta de demonstração (Veterinário)</strong><br>
+                <code>vet.demo@clyvovet.com.br</code> / <code>demo123</code>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function solinTrocarAbaLogin(perfil) {
+        var ehTutor = perfil === 'tutor';
+
+        document.getElementById('tab-tutor').classList.toggle('active', ehTutor);
+        document.getElementById('tab-vet').classList.toggle('active', !ehTutor);
+
+        document.getElementById('painel-tutor').hidden = !ehTutor;
+        document.getElementById('painel-vet').hidden = ehTutor;
+
+        document.getElementById('cadastro-tutor').hidden = !ehTutor;
+        document.getElementById('demo-tutor').hidden = !ehTutor;
+        document.getElementById('demo-vet').hidden = ehTutor;
+
+        // So preenche o email automaticamente se o campo ainda estiver vazio,
+        // para nao sobrescrever o que a pessoa ja tiver digitado.
+        var campoEmail = document.getElementById('username');
+        if (!campoEmail.value) {
+            campoEmail.placeholder = ehTutor ? 'voce@email.com' : 'voce@clyvovet.com.br';
+        }
+    }
+</script>
+
+</body>
+</html>

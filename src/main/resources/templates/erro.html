@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${titulo ?: 'Erro'})}"></head>
+<body>
+<div class="login-shell">
+    <section class="login-visual">
+        <div class="brand">
+            <div class="brand-mark">S</div>
+            <div class="brand-text"><strong>SOLIN</strong><span>Clyvo Vet</span></div>
+        </div>
+        <div class="claim">
+            <h2 th:text="${titulo ?: 'Algo não saiu como esperado'}">Erro</h2>
+            <p th:text="${mensagem ?: 'Tente novamente em instantes.'}">Detalhe</p>
+        </div>
+    </section>
+    <section class="login-form-side">
+        <div class="login-box">
+            <h1>Ops.</h1>
+            <p class="sub" th:text="${mensagem}">Detalhe do erro</p>
+            <a href="javascript:history.back()" class="btn btn-ghost" style="margin-top:18px; margin-right:10px;">Voltar</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head('Meus pets')}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar('tutor', 'pets')}"></div>
+
+    <main class="app-main">
+        <div class="container">
+
+            <div th:if="${mensagem}" class="flash" th:classappend="${tipoFlash}" th:text="${mensagem}"></div>
+
+            <div class="page-head">
+                <div>
+                    <div class="eyebrow"><span class="pulse-dot"></span> Monitoramento em tempo real</div>
+                    <h1>Meus pets</h1>
+                    <p class="sub">Acompanhe a rotina de cada pet e registre novos eventos assim que algo acontecer — o SOLIN avalia os alertas na hora.</p>
+                </div>
+                <a th:href="@{/tutor/eventos/novo}" class="btn btn-primary">+ Registrar evento</a>
+            </div>
+
+            <div class="grid grid-3" style="margin-bottom:22px;">
+                <div class="card stat tone-pulse">
+                    <div class="value" th:text="${totalPets}">0</div>
+                    <div class="label">Pets monitorados</div>
+                </div>
+                <div class="card stat tone-amber">
+                    <div class="value" th:text="${petsComAlerta}">0</div>
+                    <div class="label">Com alerta ativo</div>
+                </div>
+                <div class="card stat">
+                    <div class="value" style="font-size:22px;" th:text="${ultimoEvento}">—</div>
+                    <div class="label">Último evento registrado</div>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(pets)}" class="card empty">
+                <h3>Nenhum pet cadastrado ainda</h3>
+                <p>Cadastre o primeiro pet para começar o acompanhamento pelo SOLIN.</p>
+            </div>
+
+            <div class="grid grid-3" th:unless="${#lists.isEmpty(pets)}">
+                <div th:each="pet : ${pets}" class="pet-card" style="position:relative;">
+                    <a th:href="@{/tutor/pets/{id}(id=${pet.id})}" style="display:contents;">
+                        <div class="pet-top">
+                            <div class="pet-avatar" th:text="${pet.nomeEspecie == 'Gato'} ? '🐱' : (${pet.nomeEspecie == 'Coelho'} ? '🐰' : '🐶')">🐾</div>
+                            <div>
+                                <div class="pet-name" th:text="${pet.nome}">Nome</div>
+                                <div class="pet-sub" th:text="${pet.nomeEspecie} + (${pet.raca} != null ? ' · ' + ${pet.raca} : '')">Espécie</div>
+                            </div>
+                        </div>
+
+                        <span th:switch="${statusPorPet.get(pet.id)}">
+                            <span th:case="'vermelho'" class="badge vermelho"><span class="dot"></span> Alerta crítico</span>
+                            <span th:case="'amarelo'" class="badge amarelo"><span class="dot"></span> Atenção</span>
+                            <span th:case="*" class="badge ok"><span class="dot"></span> Rotina normal</span>
+                        </span>
+
+                        <svg class="vitalline" viewBox="0 0 300 40" preserveAspectRatio="none">
+                            <path th:if="${statusPorPet.get(pet.id) == 'vermelho'}" d="M0 20 H60 L72 4 L84 36 L96 20 H130 L142 4 L154 36 L166 20 H300" style="stroke:#ff5c5c" />
+                            <path th:if="${statusPorPet.get(pet.id) == 'amarelo'}" d="M0 20 H100 L112 8 L124 32 L136 20 H300" style="stroke:#f4c430" />
+                            <path th:if="${statusPorPet.get(pet.id) == 'ok'}" d="M0 20 H130 L142 12 L154 28 L166 20 H300" />
+                        </svg>
+                    </a>
+
+                    <form th:action="@{/tutor/pets/{id}/desativar(id=${pet.id})}" method="post"
+                          onsubmit="return confirm('Desativar este pet? Ele some da lista, mas o histórico continua salvo.');"
+                          style="margin-top:12px;">
+                        <button type="submit" class="btn btn-ghost btn-sm" style="width:100%;">Desativar pet</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>

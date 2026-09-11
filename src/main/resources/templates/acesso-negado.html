@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Acesso negado')}"></head>
+<body>
+<div class="login-shell">
+    <section class="login-visual">
+        <div class="brand">
+            <div class="brand-mark">S</div>
+            <div class="brand-text"><strong>SOLIN</strong><span>Clyvo Vet</span></div>
+        </div>
+        <div class="claim">
+            <h2>Este perfil não tem acesso a essa área.</h2>
+            <p>Tutores e veterinários enxergam telas diferentes no SOLIN. Volte para a sua área ou entre com outra conta.</p>
+        </div>
+    </section>
+    <section class="login-form-side">
+        <div class="login-box">
+            <h1>403 · Acesso negado</h1>
+            <p class="sub">Você está autenticado, mas seu perfil não tem permissão para ver esta página.</p>
+            <a th:href="@{/login}" class="btn btn-primary" style="margin-top:18px;">Voltar ao login</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

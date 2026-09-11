@@ -1,0 +1,15 @@
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo} + ' · SOLIN'">SOLIN</title>
+    <!-- Token CSRF exposto como meta tag para as poucas telas que fazem
+         chamadas via JavaScript (fetch) em vez de <form> comum - ex: o
+         chat do Assistente SOLIN. Formularios normais nao precisam
+         disso: o thymeleaf-extras-springsecurity6 ja injeta o token
+         automaticamente em todo <form method="post">. -->
+    <meta name="_csrf" th:content="${_csrf?.token}">
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/solin.css}">
+</head>
