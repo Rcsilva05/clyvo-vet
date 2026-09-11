@@ -56,7 +56,7 @@ A aplicação segue arquitetura em camadas: **Controller (Web/REST) → Service 
 
 ---
 
-## 🛠️ Stack
+##  Stack
 
 - Java 17
 - Spring Boot 3.2.5
@@ -85,7 +85,7 @@ As rotas são protegidas tanto por perfil (`hasRole`) na configuração de rotas
 
 ---
 
-## ▶️ Como rodar
+##  Como rodar
 
 ### Pré-requisitos
 - JDK 17+
@@ -367,7 +367,7 @@ docs/               → Prints/evidências de funcionamento (ver seção "Evidê
 
 ---
 
-## 👥 Equipe
+##  Equipe
 
 Repositório GitHub: https://github.com/Rcsilva05/solin---java---chalenge
 
