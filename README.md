@@ -369,6 +369,6 @@ docs/               → Prints/evidências de funcionamento (ver seção "Evidê
 
 ##  Equipe
 
-Repositório GitHub: https://github.com/Rcsilva05/solin---java---chalenge
+Repositório GitHub: https://github.com/Rcsilva05/clyvo-vet
 
 Turma: **2TDSR** — FIAP — 2026
