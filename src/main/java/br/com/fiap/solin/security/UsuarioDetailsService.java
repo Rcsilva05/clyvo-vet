@@ -22,7 +22,12 @@ public class UsuarioDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado: " + email));
+        // O cadastro grava o email sempre em minusculo (ver CadastroService).
+        // Sem essa mesma normalizacao aqui, um login com o email digitado em
+        // outra caixa (ex.: "Nome@Gmail.com") nao bate com o registro salvo
+        // e falha mesmo com a senha correta.
+        String emailNormalizado = email.trim().toLowerCase();
+        return usuarioRepository.findByEmail(emailNormalizado)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado: " + emailNormalizado));
     }
 }

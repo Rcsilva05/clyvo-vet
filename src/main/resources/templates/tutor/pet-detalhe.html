@@ -16,7 +16,13 @@
                     <h1 th:text="${pet.nome}">Nome</h1>
                     <p class="sub" th:text="${pet.nomeEspecie} + (${pet.raca} != null ? ' · ' + ${pet.raca} : '') + (${pet.pesoKg} != null ? ' · ' + ${pet.pesoKg} + ' kg' : '')">Detalhes</p>
                 </div>
-                <a th:href="@{/tutor/eventos/novo(petId=${pet.id})}" class="btn btn-primary">+ Registrar evento</a>
+                <div style="display:flex; gap:10px;">
+                    <a th:href="@{/tutor/eventos/novo(petId=${pet.id})}" class="btn btn-primary">+ Registrar evento</a>
+                    <form th:action="@{/tutor/pets/{id}/desativar(id=${pet.id})}" method="post"
+                          onsubmit="return confirm('Remover ' + [[${pet.nome}]] + '? Ele some da lista, mas o histórico continua salvo.');">
+                        <button type="submit" class="btn btn-ghost">Remover pet</button>
+                    </form>
+                </div>
             </div>
 
             <div class="grid grid-2">

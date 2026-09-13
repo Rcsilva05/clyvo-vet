@@ -64,9 +64,9 @@
                     </a>
 
                     <form th:action="@{/tutor/pets/{id}/desativar(id=${pet.id})}" method="post"
-                          onsubmit="return confirm('Desativar este pet? Ele some da lista, mas o histórico continua salvo.');"
+                          onsubmit="return confirm('Remover este pet? Ele some da lista, mas o histórico continua salvo.');"
                           style="margin-top:12px;">
-                        <button type="submit" class="btn btn-ghost btn-sm" style="width:100%;">Desativar pet</button>
+                        <button type="submit" class="btn btn-ghost btn-sm" style="width:100%;">Remover pet</button>
                     </form>
                 </div>
             </div>

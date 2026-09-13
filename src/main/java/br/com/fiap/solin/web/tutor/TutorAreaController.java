@@ -220,7 +220,7 @@ public class TutorAreaController {
         petService.desativar(id);
 
         redirectAttributes.addFlashAttribute("mensagem",
-                pet.nome() + " foi desativado e não aparece mais na lista. O histórico dele continua preservado.");
+                pet.nome() + " foi removido e não aparece mais na lista. O histórico dele continua preservado.");
         redirectAttributes.addFlashAttribute("tipoFlash", "success");
 
         return "redirect:/tutor/inicio";
